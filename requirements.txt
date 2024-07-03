@@ -4,6 +4,6 @@ scikit-learn
 pickle-mixin
 numpy
 opencv-python-headless
-tensorboard==2.6.0
+tensorflow
 Pillow
 streamlit-drawable-canvas
