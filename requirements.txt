@@ -1,6 +1,9 @@
 streamlit
+streamlit-option-menu
+scikit-learn
+pickle-mixin
 numpy
 opencv-python-headless
 tensorflow
-streamlit-drawable-canvas
 Pillow
+streamlit-drawable-canvas
