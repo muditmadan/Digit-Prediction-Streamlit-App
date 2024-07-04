@@ -6,4 +6,5 @@ numpy
 opencv-python-headless
 tensorflow
 Pillow
+matplotlib
 streamlit-drawable-canvas
