@@ -3,6 +3,7 @@ import numpy as np
 import cv2
 import tensorflow as tf
 from tensorflow.keras.models import load_model
+import matplotlib.pyplot as plt
 from streamlit_drawable_canvas import st_canvas
 from PIL import Image, ImageOps
 import base64
@@ -52,9 +53,8 @@ def main():
     option = st.sidebar.selectbox("Choose input method", ["Draw", "Upload"])
 
     if option == "Draw":
-        # Create a canvas for drawing
-        canvas = st_canvas(
-            fill_color="white",
+        canvas_result = st_canvas(
+            fill_color="rgba(255, 165, 0, 0.3)",  # Fixed fill color with some opacity
             stroke_width=stroke_width,
             stroke_color="black",
             background_color="white",
@@ -63,18 +63,15 @@ def main():
             key="canvas",
         )
 
-        if st.button("Predict"):
-            if canvas.image_data is not None:
-                drawn_image = canvas.image_data
-                preprocessed_image = preprocess_image(drawn_image)
-                prediction, confidence = predict_digit(drawn_image)
-
-                # Display the prediction and confidence
-                st.subheader("Prediction")
-                st.write(f"Predicted Digit: **{prediction}**")
-                st.write(f"Confidence: **{confidence * 100:.2f}%**")
+        # Add "Predict Now" button
+        if st.button('Predict Now'):
+            if canvas_result.image_data is not None:
+                input_numpy_array = np.array(canvas_result.image_data)
+                input_image = cv2.cvtColor(input_numpy_array.astype('uint8'), cv2.COLOR_RGBA2BGR)
+                digit, confidence = predict_digit(input_image)
+                st.header(f'Predicted Digit: {digit} with confidence {confidence:.2f}')
             else:
-                st.error("Please draw a digit on the canvas.")
+                st.header('Please draw a digit on the canvas.')
 
     elif option == "Upload":
         st.markdown("""
