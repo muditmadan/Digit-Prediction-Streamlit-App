@@ -34,18 +34,73 @@ def predict_digit(image):
 def main():
     st.set_page_config(page_title="Digit Recognition Sketchboard", page_icon="✏️", layout="centered", initial_sidebar_state="collapsed")
 
-    st.title("Digit Recognition Sketchboard")
+    st.markdown("""
+    <style>
+        body {
+            background-color: #f4f4f4;
+        }
+        .title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #444444;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .instructions, .settings, .upload {
+            font-size: 16px;
+            font-weight: bold;
+            color: #444444;
+            text-align: left;
+            margin-top: 30px;
+        }
+        .result {
+            font-size: 24px;
+            font-weight: bold;
+            color: #444444;
+            text-align: center;
+            margin-top: 30px;
+        }
+        .download-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #0073e6;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .download-button:hover {
+            background-color: #005bb5;
+        }
+        .sidebar .element-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .canvas-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<div class="title">Digit Recognition Sketchboard</div>', unsafe_allow_html=True)
     st.markdown("Choose to draw a digit or upload an image, and click 'Predict' to see the model's prediction.")
 
     # Sidebar for instructions and settings
-    st.sidebar.title("Instructions")
+    st.sidebar.markdown('<div class="instructions">Instructions</div>', unsafe_allow_html=True)
     st.sidebar.markdown("""
         1. Choose to either draw a digit or upload an image.
         2. Draw a digit (0-9) on the canvas or upload an image.
         3. Click the 'Predict' button to see the model's prediction.
         4. The predicted digit and the confidence score will be displayed.
     """)
-    st.sidebar.title("Settings")
+    st.sidebar.markdown('<div class="settings">Settings</div>', unsafe_allow_html=True)
     stroke_width = st.sidebar.slider("Stroke width:", 1, 25, 10)
     st.sidebar.markdown("Adjust the stroke width using the slider above.")
 
@@ -53,6 +108,7 @@ def main():
     option = st.sidebar.selectbox("Choose input method", ["Draw", "Upload"])
 
     if option == "Draw":
+        st.markdown('<div class="canvas-container">', unsafe_allow_html=True)
         canvas_result = st_canvas(
             fill_color="rgba(255, 165, 0, 0.3)",  # Fixed fill color with some opacity
             stroke_width=stroke_width,
@@ -62,6 +118,7 @@ def main():
             width=canvas_width,
             key="canvas",
         )
+        st.markdown('</div>', unsafe_allow_html=True)
 
         # Add "Predict Now" button
         if st.button('Predict Now'):
@@ -69,54 +126,12 @@ def main():
                 input_numpy_array = np.array(canvas_result.image_data)
                 input_image = cv2.cvtColor(input_numpy_array.astype('uint8'), cv2.COLOR_RGBA2BGR)
                 digit, confidence = predict_digit(input_image)
-                st.header(f'Predicted Digit: {digit} with confidence {confidence:.2f}')
+                st.markdown(f'<div class="result">Predicted Digit: <span style="font-size: 48px;">{digit}</span> with confidence {confidence:.2f}</div>', unsafe_allow_html=True)
             else:
-                st.header('Please draw a digit on the canvas.')
+                st.markdown('<div class="result">Please draw a digit on the canvas.</div>', unsafe_allow_html=True)
 
     elif option == "Upload":
-        st.markdown("""
-        <style>
-        .title {
-            font-size: 36px;
-            font-weight: bold;
-            color: #d3d3d3;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .file-upload {
-            font-size: 16px;
-            font-weight: bold;
-            color: #d3d3d3;
-            text-align: center;
-            margin-top: 30px;
-        }
-        .result {
-            font-size: 24px;
-            font-weight: bold;
-            color: #d3d3d3;
-            text-align: center;
-            margin-top: 30px;
-        }
-        .download-button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #d3d3d3;
-            color: #ffffff;
-            font-size: 16px;
-            font-weight: bold;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        .download-button:hover {
-            background-color: #555555;
-        }
-        </style>
-        """, unsafe_allow_html=True)
-
-        # Header
-        st.markdown('<div class="title">Handwritten Digit Recognition</div>', unsafe_allow_html=True)
-        st.markdown("Upload an image of a handwritten digit (JPEG or PNG format) and let the model predict the digit.")
+        st.markdown('<div class="upload">Upload an image of a handwritten digit (JPEG or PNG format) and let the model predict the digit.</div>', unsafe_allow_html=True)
 
         # File uploader
         uploaded_file = st.file_uploader("", type=["png", "jpg", "jpeg"], label_visibility="collapsed")
