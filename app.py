@@ -69,10 +69,6 @@ def main():
                 preprocessed_image = preprocess_image(drawn_image)
                 prediction, confidence = predict_digit(drawn_image)
 
-                # Display the preprocessed image
-                st.subheader("Preprocessed Image")
-                st.image(preprocessed_image.reshape(28, 28), width=100, caption="Model Input Image", clamp=True)
-
                 # Display the prediction and confidence
                 st.subheader("Prediction")
                 st.write(f"Predicted Digit: **{prediction}**")
